@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 
 const UserShema = new mongoose.Schema(
   {
-    firsteName: {
+    firstName: {
       type: String,
       required: true,
       min: 2,
@@ -38,10 +38,9 @@ const UserShema = new mongoose.Schema(
     viewedProfile: Number,
     impressions: Number,
   },
-  { timestamps: true },
+  { versionKey: false, timestamps: true },
 );
 
 const User = mongoose.model('User', UserShema);
 
 export default User;
- 
