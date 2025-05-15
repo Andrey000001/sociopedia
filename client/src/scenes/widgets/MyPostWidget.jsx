@@ -38,6 +38,7 @@ const MyPostWidget = ({ picturePath }) => {
   const isNonMobileScreens = useMediaQuery('(min-width: 1000px)');
   const mediumMain = palette.neutral.mediumMain;
   const medium = palette.neutral.medium;
+
   const handlePost = async () => {
     const formData = new FormData();
     formData.append('userId', _id);
@@ -46,7 +47,6 @@ const MyPostWidget = ({ picturePath }) => {
       formData.append('picture', image);
       formData.append('picturePath', image.name);
     }
-    console.log(token);
     const response = await fetch(`http://localhost:3001/posts`, {
       method: 'POST',
       headers: { Authorization: `Bearer ${token}` },
@@ -102,7 +102,7 @@ const MyPostWidget = ({ picturePath }) => {
                   )}
                 </Box>
                 {image && (
-                  <IconButton onClick={() => setImage(null)} sx={{ width: '15%' }}>
+                  <IconButton onClick={() => setImage(null)} sx={{ ml: '15px' }}>
                     <DeleteOutlined />
                   </IconButton>
                 )}

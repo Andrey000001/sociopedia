@@ -72,6 +72,7 @@ const Navbar = () => {
         )}
       </FlexBetween>
       {/* DESKTOP NAV */}
+
       {isNonMobileScreens ? (
         <FlexBetween gap="2rem">
           <IconButton onClick={() => dispatch(setMode())}>
@@ -120,7 +121,7 @@ const Navbar = () => {
           position="fixed"
           right="0"
           bottom="0"
-          height="100"
+          height="100%"
           zIndex="10"
           maxWidth="500px"
           minWidth="300px"
@@ -138,7 +139,7 @@ const Navbar = () => {
             flexDirection="column"
             justifyContent="center"
             alignItems="center"
-            gap="2rem"
+            gap="3rem"
           >
             <IconButton onClick={() => dispatch(setMode())} sx={{ fontSize: '25px' }}>
               {theme.palette.mode === 'dark' ? (

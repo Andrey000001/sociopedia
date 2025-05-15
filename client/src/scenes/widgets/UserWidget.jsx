@@ -25,6 +25,7 @@ const UserWidget = ({ userId, picturePath }) => {
   const getUser = async () => {
     try {
       const response = await fetch(`http://localhost:3001/users/${userId}`, {
+        method: 'GET',
         headers: { Authorization: `Bearer ${token}` },
       });
       if (!response.ok) throw new Error('Bad response');
@@ -43,6 +44,7 @@ const UserWidget = ({ userId, picturePath }) => {
   }
 
   const { firstName, lastName, location, occupation, viewedProfile, impressions, friends } = user;
+  
   return (
     <WidgetWrapper>
       <FlexBetween gap="0.5rem" pb="1.1rem" onClick={() => navigate(`/profile/${userId}`)}>
@@ -84,7 +86,7 @@ const UserWidget = ({ userId, picturePath }) => {
       <Box p="1rem 0">
         <FlexBetween mb="0.5rem">
           <Typography color={medium}>Who's viewed your profile</Typography>
-          <Typography color={medium} fontWeight="500">
+          <Typography color={main} fontWeight="500">
             {viewedProfile}
           </Typography>
         </FlexBetween>
@@ -103,7 +105,7 @@ const UserWidget = ({ userId, picturePath }) => {
         </Typography>
         <FlexBetween gap="1rem" mb="0.5rem">
           <FlexBetween gap="1rem">
-            <img src="../assets/twitter.png" alt="twitter" />
+            <img src="../assets/twitter.png" alt="twitter" loading="lazy" />
             <Box>
               <Typography color={main} fontWeight="500">
                 Twitter
@@ -115,7 +117,7 @@ const UserWidget = ({ userId, picturePath }) => {
         </FlexBetween>
         <FlexBetween gap="1rem">
           <FlexBetween gap="1rem">
-            <img src="../assets/linkedin.png" alt="linkedin" />
+            <img src="../assets/linkedin.png" alt="linkedin" loading="lazy" />
             <Box>
               <Typography color={main} fontWeight="500">
                 Linkedin
