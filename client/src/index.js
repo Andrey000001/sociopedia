@@ -17,6 +17,7 @@ import {
 } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 import { PersistGate } from 'redux-persist/integration/react';
+import { ToastContainer } from 'react-toastify';
 
 const persistConfig = { key: 'root', storage, version: 1 };
 const persistedReducer = persistReducer(persistConfig, authReducer);
@@ -35,7 +36,8 @@ root.render(
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistStore(store)}>
         <App />
+        <ToastContainer position="top-right" autoClose={3000} />
       </PersistGate>
     </Provider>
-  </React.StrictMode>
+  </React.StrictMode>,
 );

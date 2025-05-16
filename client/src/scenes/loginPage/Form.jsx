@@ -8,6 +8,7 @@ import { useDispatch } from 'react-redux';
 import { setLogin } from 'state';
 import Dropzone from 'react-dropzone';
 import FlexBetween from 'components/FlexBetween';
+import { toast } from 'react-toastify';
 
 const registerSchema = yup.object().shape({
   firstName: yup.string().required('required'),
@@ -50,40 +51,56 @@ const Form = () => {
   /* REGISTER */
   const register = async (values, onSubmitProps) => {
     //this allows us to send form into with image
-    const formData = new FormData();
-    for (let value in values) {
-      formData.append(value, values[value]);
-    }
-    formData.append('picturePath', values.picture.name);
+    try {
+      const formData = new FormData();
+      for (let value in values) {
+        formData.append(value, values[value]);
+      }
+      formData.append('picturePath', values.picture.name);
 
-    const savedUserResponse = await fetch('http://localhost:3001/auth/register', {
-      method: 'POST',
-      body: formData,
-    });
-    const savedUser = await savedUserResponse.json();
-    onSubmitProps.resetForm();
-    if (savedUser) {
-      setPageType('login');
+      const savedUserResponse = await fetch(`${process.env.REACT_APP_API_BASE_URL}/auth/register`, {
+        method: 'POST',
+        body: formData,
+      });
+      const savedUser = await savedUserResponse.json();
+      onSubmitProps.resetForm();
+
+      if (savedUserResponse.ok && savedUser) {
+        toast.success('Account created successfully! Please login.');
+        setPageType('login');
+      } else {
+        toast.error('Register failed. Please try again.');
+      }
+    } catch (err) {
+      toast.error('Server is currently unavailable. Please try again later.');
     }
   };
-  
+
   /* LOGIN */
   const login = async (values, onSubmitProps) => {
-    const loggedInResponse = await fetch('http://localhost:3001/auth/login', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(values),
-    });
-    const loggedIn = await loggedInResponse.json();
-    onSubmitProps.resetForm();
-    if (loggedIn) {
-      dispatch(
-        setLogin({
-          user: loggedIn.user,
-          token: loggedIn.token,
-        }),
-      );
-      navigate('/home');
+    try {
+      const loggedInResponse = await fetch(`${process.env.REACT_APP_API_BASE_URL}/auth/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(values),
+      });
+      const loggedIn = await loggedInResponse.json();
+
+      if (loggedInResponse.ok && loggedIn.token) {
+        toast.success(`Welcome back, ${loggedIn.user.firstName}`);
+        dispatch(
+          setLogin({
+            user: loggedIn.user,
+            token: loggedIn.token,
+          }),
+        );
+        onSubmitProps.resetForm();
+        navigate('/home');
+      } else {
+        toast.error('Invalid email or password. Please try again.');
+      }
+    } catch (err) {
+      toast.error('Server is currently unavailable. Please try again later.');
     }
   };
 

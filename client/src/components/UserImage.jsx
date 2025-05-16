@@ -9,7 +9,7 @@ const UserImage = ({ image, size = '60px' }) => {
         height={size}
         loading="lazy"
         alt="user"
-        src={`http://localhost:3001/assets/${image}`}
+        src={`${process.env.REACT_APP_API_BASE_URL}/assets/${image}`}
       />
     </Box>
   );
