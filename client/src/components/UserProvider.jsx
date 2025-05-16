@@ -9,8 +9,10 @@ const UserProvider = ({ children }) => {
   const { userId: routeUserId } = useParams();
   const isHome = location.pathname === '/home';
   const isOwned = isHome || routeUserId === currentUser;
-  console.log(isOwned);
-  return <UserContext.Provider value={{ isOwned }}>{children}</UserContext.Provider>;
+
+  return (
+    <UserContext.Provider value={{ isOwned }}>{children}</UserContext.Provider>
+  );
 };
 
 export default UserProvider;
