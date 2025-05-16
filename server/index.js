@@ -51,7 +51,7 @@ const storage = multer.diskStorage({
 const upload = multer({ storage });
 
 /* ROUTES WITH FILES*/
-app.post('/auth/register', upload.single('picture'), verifyToken, register);
+app.post('/auth/register', upload.single('picture'), register);
 app.post('/posts', verifyToken, upload.single('picture'), createPost);
 app.use('/auth', authRoutes);
 app.use('/users', userRoutes);
@@ -67,6 +67,5 @@ mongoose
     /* ADD DATA ONE TIME*/
     // User.insertMany(users);
     // Post.insertMany(posts);
-    
   })
   .catch((error) => console.log(`${error} did not connect`));
