@@ -26,12 +26,15 @@ import WidgetWrapper from 'components/WidgetWrapper';
 import { useDispatch, useSelector } from 'react-redux';
 import { useState } from 'react';
 import { setPosts } from 'state';
+import { toast } from 'react-toastify';
+import { useEffect } from 'react';
 
 const MyPostWidget = ({ picturePath }) => {
   const dispatch = useDispatch();
   const [isImage, setIsImage] = useState(false);
   const [image, setImage] = useState(null);
   const [post, setPost] = useState('');
+  const [isSubmitted, setIsSubmitted] = useState(false);
   const { palette } = useTheme();
   const { _id } = useSelector((state) => state.user);
   const token = useSelector((state) => state.token);
@@ -39,7 +42,22 @@ const MyPostWidget = ({ picturePath }) => {
   const mediumMain = palette.neutral.mediumMain;
   const medium = palette.neutral.medium;
 
+  useEffect(() => {
+    if (isSubmitted && !post) {
+      const timer = setTimeout(() => {
+        setIsSubmitted(false);
+      }, 2000);
+      return () => clearInterval(timer);
+    }
+  }, [isSubmitted, post]);
+
   const handlePost = async () => {
+    setIsSubmitted(true);
+    if (!post.trim()) {
+      toast.info('Field cannot be empty');
+      return;
+    }
+
     const formData = new FormData();
     formData.append('userId', _id);
     formData.append('description', post);
@@ -47,29 +65,43 @@ const MyPostWidget = ({ picturePath }) => {
       formData.append('picture', image);
       formData.append('picturePath', image.name);
     }
+
     const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/posts`, {
       method: 'POST',
       headers: { Authorization: `Bearer ${token}` },
       body: formData,
     });
+    if (!post) {
+    }
     const posts = await response.json();
     dispatch(setPosts({ posts }));
     setImage(null);
     setPost('');
   };
+
   return (
     <WidgetWrapper>
       <FlexBetween gap="1.5rem">
         <UserImage image={picturePath} />
         <InputBase
           placeholder="What's on your mind..."
-          onChange={(e) => setPost(e.target.value)}
+          onChange={(e) => {
+            setPost(e.target.value);
+            console.log(e.target.value);
+          }}
           value={post}
           sx={{
             width: '100%',
             backgroundColor: palette.neutral.light,
             borderRadius: '2rem',
             padding: '1rem 2rem',
+            border: isSubmitted && !post.trim() ? '1px solid red' : 'none',
+            animation: isSubmitted && !post.trim() ? 'blinker 1s linear infinite' : 'none',
+            '@keyframes blinker': {
+              '50%': {
+                borderColor: 'transparent',
+              },
+            },
           }}
         />
       </FlexBetween>
@@ -144,7 +176,6 @@ const MyPostWidget = ({ picturePath }) => {
           </>
         )}
         <Button
-          disabled={!post}
           onClick={handlePost}
           sx={{
             color: palette.background.alt,
