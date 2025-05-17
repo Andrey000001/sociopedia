@@ -56,11 +56,11 @@ const PostsWidget = ({ userId, isProfile = false }) => {
             location,
             picturePath,
             userPicturePath,
-            likes,
-            comments,
+            likes = {},
+            comments = [],
           }) => (
             <PostWidget
-              key={_id}
+              key={`${_id}-${firstName}`}
               postId={_id}
               postUserId={userId}
               name={`${firstName} ${lastName}`}

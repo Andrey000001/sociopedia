@@ -29,8 +29,8 @@ const PostWidget = ({
 
   const token = useSelector((state) => state.token);
   const loggedInUserId = useSelector((state) => state.user._id);
-  const isLiked = Boolean(likes[loggedInUserId]);
-  const likeCount = Object.keys(likes).length;
+  const isLiked = Boolean(likes?.[loggedInUserId]);
+  const likeCount = likes && Object.keys(likes).length;
   const { palette } = useTheme();
   const main = palette.neutral.main;
   const primary = palette.primary.main;
@@ -84,7 +84,7 @@ const PostWidget = ({
             <IconButton onClick={() => setIsComments(!isComments)}>
               <ChatBubbleOutlineOutlined />
             </IconButton>
-            <Typography>{comments.length}</Typography>
+            <Typography>{comments.length > 0 && comments.length}</Typography>
           </FlexBetween>
         </FlexBetween>
         <IconButton>
